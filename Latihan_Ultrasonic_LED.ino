@@ -64,9 +64,9 @@ void loop() {
 
     digitalWrite(led1, LOW);
     delay(500);
-    digitalWrite(led2, HIGH);
+    digitalWrite(led2, LOW);
     delay(500);
-    digitalWrite(led3, LOW);
+    digitalWrite(led3, HIGH);
     delay(500);
     
   }
