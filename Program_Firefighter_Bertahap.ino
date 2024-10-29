@@ -21,7 +21,10 @@ int in4 = 6; // Dua Roda Kiri Mundur
 
 int ENA = 2;
 int ENB = 7;
-int PWM = 150;
+int PWM = 125;
+
+// Pin Buzzer
+int buzzer = 13;
  
  
 // Sub-Fungsi Sistem Pergerakan
@@ -54,7 +57,7 @@ void moveRight() {
   analogWrite(ENB, PWM);
  Serial.println("cm\t\t");
 }
-
+ 
 void moveLeft() {
   digitalWrite(in1, HIGH);
   digitalWrite(in2, LOW);
@@ -77,10 +80,10 @@ void stopMoving() {
 const int Echo1 = A4; // Sensor Kiri
 const int Trig1 = A5;
 
-const int Echo2 = A2; // Sensor Tengah
+const int Echo2 = A2; // Sensor Kanan
 const int Trig2 = A3;
 
-const int Echo3 = A0; // Sensor Kanan
+const int Echo3 = A0; // Sensor Tengah
 const int Trig3 = A1;
 
 #define Echo1 A4
@@ -123,6 +126,9 @@ pinMode(Water_Pump, OUTPUT);
 // Setup Servo
 myservo.attach(11);
 myservo.write(90);
+
+// Setup Buzzer
+pinMode(buzzer, OUTPUT);
 
 }
 
@@ -175,7 +181,7 @@ void loop() {
 
   distanceCM2 = duration2 / 29.41 / 2;
 
-  // Sesnor Kanan
+  // Sensor Kanan
   digitalWrite(Trig3, LOW);
   delayMicroseconds(2);
   digitalWrite(Trig3, HIGH);
@@ -187,6 +193,7 @@ void loop() {
 
 // Logika Sensor dengan Sistem Pergerakan
 
+// Integrasi Sensor Ultrasonik dengan Sistem Pergerakan
 if (distanceCM2 <= 20) {
 
   stopMoving();
@@ -214,6 +221,8 @@ if (distanceCM2 <= 20) {
 
   }
 }
+
+// Integrasi Sistem Pemadaman dengan Sistem Pergerakan
 else (distanceCM2 > 10); {
   
   moveForward();
@@ -221,12 +230,12 @@ else (distanceCM2 > 10); {
   Serial.print(distanceCM2);
   Serial.println("CM");
 
-  if (digitalRead(Left_Fire) ==0 && digitalRead(Right_Fire)==0 && digitalRead(Front_Fire) ==0) {
+ if (digitalRead(Left_Fire) ==0 && digitalRead(Right_Fire)==0 && digitalRead(Front_Fire) ==0) {
 
   moveForward();
                 
   }
-  else if (digitalRead(Front_Fire) ==1) {
+  else if (digitalRead(Front_Fire) == 1) {
    
   stopMoving();
 
@@ -236,15 +245,15 @@ else (distanceCM2 > 10); {
 
   put_off_fire();
 
-  } 
+   } 
   }
-  else if (digitalRead(Left_Fire) ==1) {
+  else if (digitalRead(Left_Fire) == 1) {
 
   moveLeft();
   delay(200);
 
   }
-  else if (digitalRead(Right_Fire) ==1) {
+  else if (digitalRead(Right_Fire) == 1) {
 
   moveRight();
   delay(200);
